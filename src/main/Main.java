@@ -39,7 +39,7 @@ public final class Main {
          */
         for (int i = 1; i <= Constants.TESTS_NUMBER; ++i) {
             String inputPath = Constants.INPUT_PATH + i + ".json";
-            String outputPath = Constants.OUTPUT_PATH + i;
+            String outputPath = Constants.OUTPUT_PATH + i + ".json";
             File out = new File(outputPath);
 
             if (out.createNewFile()) {
@@ -51,13 +51,14 @@ public final class Main {
     }
 
     public static void runSimulation(final String inputPath,
-                              final String outputPath) {
+                              final String outputPath) throws IOException {
         InputLoader inputLoader = new InputLoader(inputPath);
         Input input = inputLoader.readData();
 
-        // check the input
-        System.out.println(input.getNumberOfYears());
-        System.out.println(input.getSantaBudget());
-        System.out.println(input.getAnnualChanges().size());
+        /**
+         * Entry point to main logic
+         */
+        Simulation simulator = Simulation.getInstance(input);
+        simulator.simulateAllYears(outputPath);
     }
 }
