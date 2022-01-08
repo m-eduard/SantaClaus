@@ -2,6 +2,9 @@ package input;
 
 import enums.Category;
 
+/**
+ * Information about a gift, parsed from the input
+ */
 public final class GiftInput {
     private final String productName;
     private final double price;
@@ -12,5 +15,17 @@ public final class GiftInput {
         this.productName = productName;
         this.price = price;
         this.category = category;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 }

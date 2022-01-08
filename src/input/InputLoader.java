@@ -10,8 +10,12 @@ import utils.Utils;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-public class InputLoader {
+/**
+ * Class used to parse the input data from JSON files
+ */
+public final class InputLoader {
     /**
      * The path of the input file
      */
@@ -29,9 +33,9 @@ public class InputLoader {
         int numberOfYears = 0;
         double santaBudget = 0.0;
 
-        ArrayList<ChildInput> children = null;
-        ArrayList<GiftInput> gifts = null;
-        ArrayList<AnnualChangeInput> annualChanges = new ArrayList<>();
+        List<ChildInput> children = null;
+        List<GiftInput> gifts = null;
+        List<AnnualChangeInput> annualChanges = new ArrayList<>();
 
         try {
             JSONObject jsonObject = (JSONObject) (new JSONParser())
@@ -56,11 +60,17 @@ public class InputLoader {
         }
 
         return new Input(numberOfYears, santaBudget,
-                new InitialDataInput(children, gifts), annualChanges);
+                new InitialDataInput(children, gifts),
+                annualChanges);
     }
 
-    public ArrayList<ChildInput> readChildren(final JSONArray jsonChildren) {
-        ArrayList<ChildInput> children = new ArrayList<>();
+    /**
+     * Creates a list of ChildInput instances, using the parsed input data
+     * @param jsonChildren array of children as JSONObject(s)
+     * @return list of children (every child is represented as a ChildInput instance)
+     */
+    public List<ChildInput> readChildren(final JSONArray jsonChildren) {
+        List<ChildInput> children = new ArrayList<>();
 
         if (jsonChildren != null) {
             for (Object jsonChild : jsonChildren) {
@@ -79,12 +89,16 @@ public class InputLoader {
         } else {
             System.out.println("No child on the Santa's list");
         }
-
         return children;
     }
 
-    public ArrayList<GiftInput> readGifts(final JSONArray jsonGiftsList) {
-        ArrayList<GiftInput> gifts = new ArrayList<>();
+    /**
+     * Loads the parsed input data into a list of GiftInput instances
+     * @param jsonGiftsList JSONArray of gifts
+     * @return list of GiftInput(s)
+     */
+    public List<GiftInput> readGifts(final JSONArray jsonGiftsList) {
+        List<GiftInput> gifts = new ArrayList<>();
 
         if (jsonGiftsList != null) {
             for (Object jsonGift : jsonGiftsList) {
@@ -99,12 +113,16 @@ public class InputLoader {
         } else {
             System.out.println("No gifts on the list:(");
         }
-
         return gifts;
     }
 
-    public ArrayList<AnnualChangeInput> readAnnualChanges(final JSONArray jsonAnnualChanges) {
-        ArrayList<AnnualChangeInput> annualChanges = new ArrayList<>();
+    /**
+     * Creates a list to store every annual change
+     * @param jsonAnnualChanges JSONArray of annual changes
+     * @return list of annual changes (as AnnualChangeInput objects)
+     */
+    public List<AnnualChangeInput> readAnnualChanges(final JSONArray jsonAnnualChanges) {
+        List<AnnualChangeInput> annualChanges = new ArrayList<>();
 
         if (jsonAnnualChanges != null) {
             for (Object jsonAnnualChange : jsonAnnualChanges) {
@@ -115,22 +133,26 @@ public class InputLoader {
                                 .get(Constants.NEW_GIFTS)),
                         readChildren((JSONArray) ((JSONObject) jsonAnnualChange)
                                 .get(Constants.NEW_CHILDREN)),
-                        readChildUpdates((JSONArray) ((JSONObject) jsonAnnualChange)
+                        readChildrenUpdates((JSONArray) ((JSONObject) jsonAnnualChange)
                                 .get(Constants.CHILDREN_UPDATES))
                 ));
             }
         } else {
             System.out.println("No annual changes");
         }
-
         return annualChanges;
     }
 
-    public ArrayList<ChildUpdateInput> readChildUpdates(final JSONArray jsonChildUpdates) {
-        ArrayList<ChildUpdateInput> childUpdates = new ArrayList<>();
+    /**
+     * Reads the children updates for one year
+     * @param jsonChildrenUpdates JSONArray of children updates
+     * @return list of updates for children
+     */
+    public List<ChildUpdateInput> readChildrenUpdates(final JSONArray jsonChildrenUpdates) {
+        List<ChildUpdateInput> childUpdates = new ArrayList<>();
 
-        if (jsonChildUpdates != null) {
-            for (Object jsonChildUpdate : jsonChildUpdates) {
+        if (jsonChildrenUpdates != null) {
+            for (Object jsonChildUpdate : jsonChildrenUpdates) {
                 childUpdates.add(new ChildUpdateInput(
                         Integer.parseInt(((JSONObject) jsonChildUpdate)
                                 .get(Constants.ID).toString()),
@@ -145,7 +167,6 @@ public class InputLoader {
         } else {
             System.out.println("No children updates");
         }
-
         return childUpdates;
     }
 }

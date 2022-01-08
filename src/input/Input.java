@@ -2,6 +2,9 @@ package input;
 
 import java.util.List;
 
+/**
+ * Class that contains all the information parsed from the input JSON
+ */
 public final class Input {
     /**
      * Number of years to run the simulation
