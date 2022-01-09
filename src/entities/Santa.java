@@ -15,7 +15,7 @@ public final class Santa {
     private double budget;
     /**
      * Budget unit (will be calculated based on the
-     * average scores of the children in santa's list)
+     * average scores of the children in Santa's list)
      */
     private double budgetUnit;
     /**
@@ -24,7 +24,7 @@ public final class Santa {
     private final Map<Category, List<Gift>> availableGifts;
     /**
      * Santa's list, represented as a map,
-     * where every kid is mapped to its id
+     * where every kid is mapped to his id
      */
     private final Map<Integer, Child> childrenList;
 

@@ -37,10 +37,19 @@ public class UpdateSanta implements Command {
     /**
      * Updates Santa's resources for the new year
      * and also updates the info for the children
-     * that are still on its list.
+     * that are still on his list.
      */
     @Override
     public void execute() {
+        /* Add the new gifts to Santa's list */
+        newGifts.forEach(gift -> {
+            if (!santa.getAvailableGifts().containsKey(gift.getCategory())) {
+                santa.getAvailableGifts().put(gift.getCategory(), new ArrayList<>());
+            }
+            santa.getAvailableGifts().get(gift.getCategory())
+                    .add(new Gift(gift.getProductName(), gift.getPrice(), gift.getCategory()));
+        });
+
         santa.setBudget(newBudget);
 
         /* Increment the age for the children that are
@@ -50,7 +59,7 @@ public class UpdateSanta implements Command {
             santa.getChildrenList().get(id).incrementAge();
         }
 
-        /* Add all the new children in santa's list
+        /* Add all the new children in Santa's list
          * (which is represented as Map)
          * */
         for (Child child : newChildren) {

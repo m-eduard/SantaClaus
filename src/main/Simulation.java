@@ -29,7 +29,7 @@ import utils.Utils;
 
 /**
  * Class that runs the simulation for the given input
- * (Implemented as singleton)
+ * (implemented as singleton)
  */
 public final class Simulation {
     private int numberOfYears;
@@ -116,7 +116,7 @@ public final class Simulation {
      * and keeps the track of the changes that occur for every child
      *
      * @param mapper ObjectMapper, used as mapper for JSONs
-     * @param childrenJsonArray head of an array used to store every year
+     * @param childrenJsonArray head of an array used to store in every year
      *                          the current state for the children in Santa's
      *                          list, ordered by their id-s
      */
@@ -130,6 +130,10 @@ public final class Simulation {
         Invoker invoker = Invoker.getInstance();
         invoker.restart();
 
+        /* Every iteration of the for represents a round of simulation
+         * (i starts from -1, because the first round is using the initial
+         * data, and is not linked to the annual updates that will occur
+         * for <numberOfYears> years) */
         for (int i = -1; i < numberOfYears; ++i) {
             /* For the first simulation (when i == -1),
              * no data has to be updated, so the update
@@ -154,6 +158,7 @@ public final class Simulation {
             List<Child> orderedChildren = new ArrayList<>(santa.getChildrenList().values());
             orderedChildren.sort(Comparator.comparingInt(Child::getId));
 
+            /* Make a copy of children's current data, storing the copies sorted by id-s */
             orderedChildren.forEach(child -> yearChildrenList.add(new Child(child)));
             childrenJsonArray.add(mapper.createObjectNode().putPOJO("children", yearChildrenList));
         }

@@ -26,7 +26,7 @@ public final class Invoker {
     }
 
     /**
-     *  Get the instance of the invoker
+     * Get the instance of the invoker
      * @return Invoker instance
      */
     public static Invoker getInstance() {
