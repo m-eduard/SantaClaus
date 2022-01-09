@@ -36,7 +36,7 @@ public final class Santa {
      * Method that accepts the visit of a Visitor
      * @param visitor a Visitor object
      */
-    public void visit(final Visitor visitor) {
+    public void accept(final Visitor visitor) {
         visitor.visit(this);
     }
 
