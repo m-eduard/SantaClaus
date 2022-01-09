@@ -6,7 +6,6 @@ import enums.Category;
 import enums.Cities;
 import factory.AverageScoreFactory;
 import utils.Utils;
-import visitor.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,14 +65,6 @@ public final class Child {
         this.giftsPreferences = new ArrayList<>(child.getGiftsPreferences());
         this.ageCategory = child.getAgeCategory();
         this.receivedGifts = new ArrayList<>(child.getReceivedGifts());
-    }
-
-    /**
-     * Method that accepts the visit of a Visitor
-     * @param visitor a Visitor object
-     */
-    public void accept(final Visitor visitor) {
-        visitor.visit(this);
     }
 
     /**

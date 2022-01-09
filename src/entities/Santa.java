@@ -1,7 +1,6 @@
 package entities;
 
 import enums.Category;
-import visitor.Visitor;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,11 @@ public final class Santa {
      * Current Santa's budget
      */
     private double budget;
+    /**
+     * Budget unit (will be calculated based on the
+     * average scores of the children in santa's list)
+     */
+    private double budgetUnit;
     /**
      * List of gifts stored by their category
      */
@@ -32,16 +36,12 @@ public final class Santa {
         this.childrenList = childrenList;
     }
 
-    /**
-     * Method that accepts the visit of a Visitor
-     * @param visitor a Visitor object
-     */
-    public void accept(final Visitor visitor) {
-        visitor.visit(this);
-    }
-
     public double getBudget() {
         return budget;
+    }
+
+    public double getBudgetUnit() {
+        return budgetUnit;
     }
 
     public Map<Category, List<Gift>> getAvailableGifts() {
@@ -54,5 +54,9 @@ public final class Santa {
 
     public void setBudget(final double budget) {
         this.budget = budget;
+    }
+
+    public void setBudgetUnit(final double budgetUnit) {
+        this.budgetUnit = budgetUnit;
     }
 }

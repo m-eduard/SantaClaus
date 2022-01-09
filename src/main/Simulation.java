@@ -10,9 +10,10 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+import command.CalculateBudgetUnit;
+import command.CalculateChildBudget;
 import command.Invoker;
 import command.UpdateSanta;
-import visitor.Visitor;
 import entities.Child;
 import entities.Gift;
 import entities.Santa;
@@ -24,7 +25,6 @@ import strategy.DistributionStrategy;
 import strategy.IdDistributionStrategy;
 import entities.ChildUpdate;
 import utils.Utils;
-import visitor.BudgetVisitor;
 
 
 /**
@@ -126,11 +126,6 @@ public final class Simulation {
          * between all the children */
         DistributionStrategy distributor = new IdDistributionStrategy();
 
-        /* Visitor used to apply the algorithms for calculating the
-         * assigned budget for a child and for updating a Child/Santa
-         * after a new year passed by. */
-        Visitor budgetVisitor = new BudgetVisitor();
-
         /* Invoker for the commands applied on Santa/Child */
         Invoker invoker = Invoker.getInstance();
         invoker.restart();
@@ -145,9 +140,9 @@ public final class Simulation {
                         newChildren.get(i), childrenUpdates.get(i)));
             }
 
-            santa.accept(budgetVisitor);
+            invoker.execute(new CalculateBudgetUnit(santa));
             for (Child child : santa.getChildrenList().values()) {
-                child.accept(budgetVisitor);
+                invoker.execute(new CalculateChildBudget(child, santa.getBudgetUnit()));
             }
 
             distributor.distributeGifts(santa.getAvailableGifts(),
