@@ -4,16 +4,16 @@ import enums.Category;
 
 import java.util.List;
 
-public class ChildUpdate {
+public final class ChildUpdate {
     private final int id;
     private final Double niceScore;
-    private final List<Category> giftsPreference;
+    private final List<Category> giftsPreferences;
 
     public ChildUpdate(final int id, final Double niceScore,
                             final List<Category> giftsPreference) {
         this.id = id;
         this.niceScore = niceScore;
-        this.giftsPreference = giftsPreference;
+        this.giftsPreferences = giftsPreference;
     }
 
     public int getId() {
@@ -24,7 +24,7 @@ public class ChildUpdate {
         return niceScore;
     }
 
-    public List<Category> getGiftsPreference() {
-        return giftsPreference;
+    public List<Category> getGiftsPreferences() {
+        return giftsPreferences;
     }
 }

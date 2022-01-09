@@ -1,9 +1,7 @@
 package visitor;
 
-import command.Visitor;
 import entities.Child;
 import entities.Santa;
-import factory.AverageScoreFactory;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,8 +32,6 @@ public class BudgetVisitor implements Visitor {
      *  - calculates the santa's budget unit,
      *    by dividing santa's total budget to the sum
      *    of children's average scores
-     *  - assigns a budget to children, by calling
-     *    the visit method for every child in santa's lists
      * <p>
      * <b>This method should be called before visiting a child!</b>
      * </p>
@@ -52,18 +48,9 @@ public class BudgetVisitor implements Visitor {
         orderedChildren.sort(Comparator.comparingInt(Child::getId));
 
         for (Child child : orderedChildren) {
-            double currentAverageScore = AverageScoreFactory.getInstance()
-                    .createStrategy(child.getAgeCategory().name())
-                    .getAverageScore(child);
-
-            child.setAverageScore(currentAverageScore);
-            sumScoresAverage += currentAverageScore;
+            sumScoresAverage += child.getAverageScore();
         }
 
         budgetUnit = santa.getBudget() / sumScoresAverage;
-
-        for (Child child : santa.getChildrenList().values()) {
-            child.accept(this);
-        }
     }
 }

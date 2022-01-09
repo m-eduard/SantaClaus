@@ -4,7 +4,7 @@ import entities.Child;
 import entities.Gift;
 import entities.Santa;
 import enums.AgeCategory;
-import update.ChildUpdate;
+import entities.ChildUpdate;
 
 import java.util.ArrayList;
 import java.util.List;

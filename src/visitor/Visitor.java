@@ -1,4 +1,4 @@
-package command;
+package visitor;
 
 import entities.Child;
 import entities.Santa;

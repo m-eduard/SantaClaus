@@ -1,7 +1,7 @@
 package entities;
 
 import enums.Category;
-import command.Visitor;
+import visitor.Visitor;
 
 import java.util.List;
 import java.util.Map;

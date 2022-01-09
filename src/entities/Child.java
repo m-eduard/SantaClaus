@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import enums.AgeCategory;
 import enums.Category;
 import enums.Cities;
+import factory.AverageScoreFactory;
 import utils.Utils;
-import command.Visitor;
+import visitor.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,14 @@ public final class Child {
 
         this.ageCategory = Utils.ageToAgeCategory(age);
         this.receivedGifts = new ArrayList<>();
+
+        /* Get the initial average score, if the child is younger
+         * than a YOUNG_ADULT */
+        if (ageCategory != AgeCategory.YOUNG_ADULT) {
+            this.averageScore = AverageScoreFactory.getInstance()
+                    .createStrategy(ageCategory.name())
+                    .getAverageScore(this);
+        }
     }
 
     /**
@@ -68,12 +77,23 @@ public final class Child {
     }
 
     /**
-     * Updates the child's age and empties the receivedGifts list,
-     * so a new batch of gifts can be assigned in the new year.
+     * -- updates the child's age
+     * -- updates the child's age category
+     * -- recalculates the average score (after a year have passed,
+     *    the age category might have changed, so the average score
+     *    will be modified)
+     * -- empties the receivedGifts list, so a new batch of gifts
+     *    can be assigned in the new year
      */
     public void incrementAge() {
         age += 1;
         ageCategory = Utils.ageToAgeCategory(age);
+
+        if (ageCategory != AgeCategory.YOUNG_ADULT) {
+            averageScore = AverageScoreFactory.getInstance()
+                    .createStrategy(ageCategory.name())
+                    .getAverageScore(this);
+        }
 
         receivedGifts.clear();
     }
