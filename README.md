@@ -38,6 +38,7 @@ For every round of the simulation, the following actions happen:
 
 <h3>Command Pattern</h3>
 
+-------------------------------------------------------------------------------
 To implement the operations that change the state of an object,
 such as updating a Child/Santa with new gathered data ("yearly update")
 or calculating the budget unit/child's budget, I used the Command Pattern,
@@ -45,9 +46,11 @@ wrapping the actions in Command type objects.<br>
 The advantage of this approach is that if at some point, an update have to
 be undone, the state of the objects can be rolled back easily, without changing
 the structure of the code so much.
--------------------------------------------------------------------------------
+
 
 <h3>Strategy Pattern</h3>
+
+-------------------------------------------------------------------------------
 Because every age category implies a specific way to calculate the average
 score of a child, I chose to create multiple <b>strategies</b>, one for every 
 algorithm used to get the score.
@@ -59,16 +62,20 @@ distributes the gifts to children sorted by their id-s),  because at this
 stage of the project the order doesn't really matter, since the amount of
 gifts owned by Santa is infinite, but in the future new distribution
 strategies can be easily added.
--------------------------------------------------------------------------------
+
 
 <h3>Factory Pattern</h3>
+
+-------------------------------------------------------------------------------
 In order to generate a strategy object to calculate the average score
 for a certain age category, the <b>factory pattern</b> has been chosen.
 In this manner, depending on a child's age, the proper average
 score calculation strategy is created.
--------------------------------------------------------------------------------
+
 
 <h3>Singleton Pattern</h3>
+
+-------------------------------------------------------------------------------
 -invoker, simulation, factory
 In order to have an instance available from anywhere within the program
 and to store all the executed commands on a common history, the <b>Invoker</b>
@@ -76,4 +83,3 @@ for the Command Pattern is implemented as a <b>singleton</b>.
 
 Also, the factory which generates strategy objects to calculate the average
 score and class used to run the simulation are Singletons.
-------------------------------------------------------------
