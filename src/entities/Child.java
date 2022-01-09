@@ -14,9 +14,9 @@ import java.util.List;
  * Information about a child
  */
 public final class Child {
-    private int id;
-    private String lastName;
-    private String firstName;
+    private final int id;
+    private final String lastName;
+    private final String firstName;
     private final Cities city;
     private int age;
     private final List<Category> giftsPreferences;
