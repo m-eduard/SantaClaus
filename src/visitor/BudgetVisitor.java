@@ -39,17 +39,14 @@ public class BudgetVisitor implements Visitor {
      */
     @Override
     public void visit(final Santa santa) {
-        double sumScoresAverage = 0.0;
-
         /* Sort the santa's list of children after id, in
          * order to sum the average scores (doubles) in the
          * requested order */
         List<Child> orderedChildren = new ArrayList<>(santa.getChildrenList().values());
         orderedChildren.sort(Comparator.comparingInt(Child::getId));
 
-        for (Child child : orderedChildren) {
-            sumScoresAverage += child.getAverageScore();
-        }
+        double sumScoresAverage = orderedChildren.stream()
+                .map(Child::getAverageScore).reduce(0.0, Double::sum);
 
         budgetUnit = santa.getBudget() / sumScoresAverage;
     }

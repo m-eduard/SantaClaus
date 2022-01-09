@@ -1,4 +1,4 @@
-package update;
+package entities;
 
 import enums.Category;
 

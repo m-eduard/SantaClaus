@@ -82,7 +82,7 @@ public final class InputLoader {
                         Utils.stringToCity((String) ((JSONObject) jsonChild).get(Constants.CITY)),
                         Double.parseDouble(((JSONObject) jsonChild)
                                 .get(Constants.NICE_SCORE).toString()),
-                        Utils.JSONArrayToCategoryList((JSONArray) ((JSONObject) jsonChild)
+                        Utils.jsonArrayToCategoryList((JSONArray) ((JSONObject) jsonChild)
                                 .get(Constants.GIFTS_PREFERENCES))
                 ));
             }
@@ -160,7 +160,7 @@ public final class InputLoader {
                                 ? null
                                 : Double.parseDouble(((JSONObject) jsonChildUpdate)
                                 .get(Constants.NICE_SCORE).toString()),
-                        Utils.JSONArrayToCategoryList((JSONArray) ((JSONObject) jsonChildUpdate)
+                        Utils.jsonArrayToCategoryList((JSONArray) ((JSONObject) jsonChildUpdate)
                                 .get(Constants.GIFTS_PREFERENCES))
                 ));
             }
