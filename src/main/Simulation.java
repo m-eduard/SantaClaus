@@ -1,8 +1,18 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import command.Invoker;
+import command.UpdateSanta;
+import visitor.Visitor;
 import entities.Child;
 import entities.Gift;
 import entities.Santa;
@@ -12,19 +22,16 @@ import input.AnnualChangeInput;
 import input.Input;
 import strategy.DistributionStrategy;
 import strategy.IdDistributionStrategy;
-import update.ChildUpdate;
+import entities.ChildUpdate;
 import utils.Utils;
+import visitor.BudgetVisitor;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Class that runs the simulation for the given input
  * (Implemented as singleton)
  */
-public class Simulation {
+public final class Simulation {
     private int numberOfYears;
     private List<Double> santaBudgets;
     private List<List<Gift>> newGifts;
@@ -34,111 +41,126 @@ public class Simulation {
 
     private static Simulation instance = null;
 
-    private Simulation() {}
+    private Simulation() { }
 
-    public static Simulation getInstance(Input input) {
-        if (instance == null)
+    /**
+     * Method that loads the parsed input data in classes that will be
+     * used alongside the simulation
+     * @param input Input object that stores the data read from input files
+     * @return Simulation instance, further used to simulate the Christmas
+     *         without a proper Santa
+     */
+    public static Simulation getInstance(final Input input) {
+        if (instance == null) {
             instance = new Simulation();
-
-        /**
-         * Load the data stored in input
-         */
+        }
 
         instance.numberOfYears = input.getNumberOfYears();
 
-        /**
-         * Create a Map that stores for every category
-         * of gifts a bucket with the available gifts
-         */
+        /* Create a Map that stores for every category
+         * of gifts a bucket with the available gifts */
         Map<Category, List<Gift>> availableGifts = new HashMap<>();
         input.getInitialData().getGifts().forEach(gift -> {
             if (!availableGifts.containsKey(gift.getCategory())) {
                 availableGifts.put(gift.getCategory(), new ArrayList<>());
             }
-            availableGifts.get(gift.getCategory()).add(new Gift(gift.getProductName(),
-                    gift.getPrice(), gift.getCategory()));
+            availableGifts.get(gift.getCategory())
+                    .add(new Gift(gift.getProductName(), gift.getPrice(), gift.getCategory()));
         });
 
-        /**
-         * Put in Santa's list only the children that have less than 18 years
-         */
+        /* Put in Santa's list only the children that have less than 18 years */
         instance.santa = new Santa(input.getSantaBudget(), availableGifts,
                 input.getInitialData().getChildren().stream()
                         .filter(x -> Utils.ageToAgeCategory(x.getAge()) != AgeCategory.YOUNG_ADULT)
-                        .collect(Collectors.toMap(x -> x.getId(), x ->
-                                new Child(x.getId(), x.getFirstName(), x.getLastName(), x.getCity(), x.getAge(),
-                                        new ArrayList<>(Arrays.asList(x.getNiceScore())),
-                                        x.getGiftsPreference()))));
+                        .collect(Collectors.toMap(x -> x.getId(), x -> new Child(x.getId(),
+                                x.getFirstName(), x.getLastName(), x.getCity(), x.getAge(),
+                                new ArrayList<>(List.of(x.getNiceScore())),
+                                x.getGiftsPreferences()))));
 
+        /* Create a list of Santa's new yearly budgets */
         instance.santaBudgets = input.getAnnualChanges().stream()
                 .map(AnnualChangeInput::getNewSantaBudget).collect(Collectors.toList());
+
+        /* Create a list of the new gifts added in every year,
+         * converting GiftInput objects into Gift objects */
         instance.newGifts = input.getAnnualChanges().stream()
                 .map(x -> x.getNewGifts().stream()
                         .map(y -> new Gift(y.getProductName(), y.getPrice(), y.getCategory()))
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
+
+        /* Create a list of the new children added to Santa's list
+         * in every year (ChildInput is converted into Child) */
         instance.newChildren = input.getAnnualChanges().stream()
                 .map(x -> x.getNewChildren().stream()
                         .map(y -> new Child(y.getId(), y.getFirstName(),
                                 y.getLastName(), y.getCity(), y.getAge(),
-                                new ArrayList<>(Arrays.asList(y.getNiceScore())),
-                                y.getGiftsPreference()))
+                                new ArrayList<>(List.of(y.getNiceScore())),
+                                y.getGiftsPreferences()))
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
+
+        /* Create a list of yearly children updates */
         instance.childrenUpdates = input.getAnnualChanges().stream()
                 .map(x -> x.getChildrenUpdates().stream()
-                        .map(y -> new ChildUpdate(y.getId(), y.getNiceScore(), y.getGiftsPreference()))
+                        .map(y -> new ChildUpdate(y.getId(),
+                                y.getNiceScore(), y.getGiftsPreference()))
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
 
         return instance;
     }
 
-    public static Simulation getInstance() {
-        if (instance == null)
-            instance = new Simulation();
-        return instance;
-    }
-
-    public void simulateAllYears(final String outputPath) throws IOException {
-        /**
-         * Strategy used to distribute the available gifts
-         * between all the children
-         */
+    /**
+     * Method that runs the simulation for all the years,
+     * and keeps the track of the changes that occur for every child
+     *
+     * @param mapper ObjectMapper, used as mapper for JSONs
+     * @param childrenJsonArray head of an array used to store every year
+     *                          the current state for the children in Santa's
+     *                          list, ordered by their id-s
+     */
+    public void simulateAllYears(final ObjectMapper mapper,
+                                 final ArrayNode childrenJsonArray) {
+        /* Strategy used to distribute the available gifts
+         * between all the children */
         DistributionStrategy distributor = new IdDistributionStrategy();
 
-        ObjectMapper mapper = new ObjectMapper();
+        /* Visitor used to apply the algorithms for calculating the
+         * assigned budget for a child and for updating a Child/Santa
+         * after a new year passed by. */
+        Visitor budgetVisitor = new BudgetVisitor();
 
-        santa.setChildrenBudgets();
-        distributor.distributeGifts(santa.getAvailableGifts(),
-                santa.getChildrenList());
+        /* Invoker for the commands applied on Santa/Child */
+        Invoker invoker = Invoker.getInstance();
+        invoker.restart();
 
-        List<Child> out = new ArrayList<>();
-        for (Child child : santa.getChildrenList().values()) {
-            out.add(new Child(child));
-        }
+        for (int i = -1; i < numberOfYears; ++i) {
+            /* For the first simulation (when i == -1),
+             * no data has to be updated, so the update
+             * command is executed only for other iterations */
+            if (i >= 0) {
+                invoker.execute(new UpdateSanta(santa,
+                        santaBudgets.get(i), newGifts.get(i),
+                        newChildren.get(i), childrenUpdates.get(i)));
+            }
 
-        ObjectNode annualChildren = mapper.createObjectNode();
-        ArrayNode arrayNode = mapper.createArrayNode();
-        arrayNode.add(mapper.createObjectNode().putPOJO("children", out));
+            santa.accept(budgetVisitor);
+            for (Child child : santa.getChildrenList().values()) {
+                child.accept(budgetVisitor);
+            }
 
-        for (int i = 0; i < numberOfYears; ++i) {
-            santa.update(santaBudgets.get(i), newGifts.get(i),
-                    newChildren.get(i), childrenUpdates.get(i));
-            santa.setChildrenBudgets();
             distributor.distributeGifts(santa.getAvailableGifts(),
                     santa.getChildrenList());
 
-            List<Child> out1 = new ArrayList<>();
+            /* List that will store the output data for one year */
+            List<Child> yearChildrenList = new ArrayList<>();
+
             List<Child> orderedChildren = new ArrayList<>(santa.getChildrenList().values());
             orderedChildren.sort(Comparator.comparingInt(Child::getId));
-            for (Child child : orderedChildren)
-                out1.add(new Child(child));
 
-            arrayNode.add(mapper.createObjectNode().putPOJO("children", out1));
+            orderedChildren.forEach(child -> yearChildrenList.add(new Child(child)));
+            childrenJsonArray.add(mapper.createObjectNode().putPOJO("children", yearChildrenList));
         }
-
-        annualChildren.putPOJO("annualChildren", arrayNode);
-        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputPath), annualChildren);
     }
 }

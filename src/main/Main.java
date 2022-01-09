@@ -1,9 +1,12 @@
 package main;
 
 import checker.Checker;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import common.Constants;
 import input.Input;
 import input.InputLoader;
+import output.Writer;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,25 +43,33 @@ public final class Main {
         for (int i = 1; i <= Constants.TESTS_NUMBER; ++i) {
             String inputPath = Constants.INPUT_PATH + i + ".json";
             String outputPath = Constants.OUTPUT_PATH + i + ".json";
-            File out = new File(outputPath);
 
-            if (out.createNewFile()) {
-                runSimulation(inputPath, outputPath);
-            }
+            runSimulation(inputPath, outputPath);
         }
 
         Checker.calculateScore();
     }
 
+    /**
+     * Method that runs the simulation for a dataset corresponding to a test
+     * @param inputPath the path of the test, as String
+     * @param outputPath the path where the output will be written, as String
+     * @throws IOException
+     */
     public static void runSimulation(final String inputPath,
                               final String outputPath) throws IOException {
         InputLoader inputLoader = new InputLoader(inputPath);
         Input input = inputLoader.readData();
 
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode childrenJsonArray = mapper.createArrayNode();
+
         /**
-         * Entry point to main logic
+         * Entry point to the main logic
          */
         Simulation simulator = Simulation.getInstance(input);
-        simulator.simulateAllYears(outputPath);
+        simulator.simulateAllYears(mapper, childrenJsonArray);
+
+        Writer.writeJsonToFile(outputPath, mapper, childrenJsonArray);
     }
 }
