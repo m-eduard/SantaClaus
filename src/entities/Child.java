@@ -5,6 +5,7 @@ import enums.AgeCategory;
 import enums.Category;
 import enums.Cities;
 import utils.Utils;
+import command.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Information about a child
  */
-public class Child {
+public final class Child {
     private int id;
     private String lastName;
     private String firstName;
@@ -59,6 +60,14 @@ public class Child {
     }
 
     /**
+     * Method that accepts the visit of a Visitor
+     * @param visitor a Visitor object
+     */
+    public void accept(final Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    /**
      * Updates the child's age and empties the receivedGifts list,
      * so a new batch of gifts can be assigned in the new year.
      */
@@ -67,33 +76,6 @@ public class Child {
         ageCategory = Utils.ageToAgeCategory(age);
 
         receivedGifts.clear();
-    }
-
-    /**
-     * Updates the child's info with new data, gathered from the last year.
-     * @param newScore new year's score
-     * @param newPreferences new year's preferences
-     */
-    public void update(Double newScore, List<Category> newPreferences) {
-        ageCategory = Utils.ageToAgeCategory(age);
-
-        /* Insert the new gift preferences into the list,
-         * pushing consecutively the least important ones
-         * on the first position, so in the end, the list will
-         * store the preferences decreasingly after priority
-         * */
-        for (int i = newPreferences.size() - 1; i >= 0; --i) {
-            /* Remove the preference, if it already exists,
-             * in order to insert it again, at the beginning
-             * of the list (with higher priority)
-             * */
-            giftsPreferences.remove(newPreferences.get(i));
-            giftsPreferences.add(0, newPreferences.get(i));
-        }
-
-        if (newScore != null) {
-            niceScoreHistory.add(newScore);
-        }
     }
 
     public int getId() {
@@ -140,11 +122,11 @@ public class Child {
         return ageCategory;
     }
 
-    public void setAverageScore(double averageScore) {
+    public void setAverageScore(final double averageScore) {
         this.averageScore = averageScore;
     }
 
-    public void setAssignedBudget(double assignedBudget) {
+    public void setAssignedBudget(final double assignedBudget) {
         this.assignedBudget = assignedBudget;
     }
 }
