@@ -1,5 +1,7 @@
 package input;
 
+import enums.CityStrategyEnum;
+
 import java.util.List;
 
 /**
@@ -10,15 +12,18 @@ public final class AnnualChangeInput {
     private final List<GiftInput> newGifts;
     private final List<ChildInput> newChildren;
     private final List<ChildUpdateInput> childrenUpdates;
+    private final CityStrategyEnum distributionStrategy;
 
     public AnnualChangeInput(final double newSantaBudget,
                              final List<GiftInput> newGifts,
                              final List<ChildInput> newChildren,
-                             final List<ChildUpdateInput> childrenUpdates) {
+                             final List<ChildUpdateInput> childrenUpdates,
+                             final CityStrategyEnum distributionStrategy) {
         this.newSantaBudget = newSantaBudget;
         this.newGifts = newGifts;
         this.newChildren = newChildren;
         this.childrenUpdates = childrenUpdates;
+        this.distributionStrategy = distributionStrategy;
     }
 
     public double getNewSantaBudget() {
@@ -35,5 +40,9 @@ public final class AnnualChangeInput {
 
     public List<ChildUpdateInput> getChildrenUpdates() {
         return childrenUpdates;
+    }
+
+    public CityStrategyEnum getDistributionStrategy() {
+        return distributionStrategy;
     }
 }

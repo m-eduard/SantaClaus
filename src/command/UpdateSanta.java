@@ -5,6 +5,7 @@ import entities.Gift;
 import entities.Santa;
 import enums.AgeCategory;
 import entities.ChildUpdate;
+import enums.CityStrategyEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +22,20 @@ public class UpdateSanta implements Command {
      * List of updates for the current year
      */
     private final List<ChildUpdate> childrenUpdate;
+    private final CityStrategyEnum newDistributionStrategy;
 
     public UpdateSanta(final Santa santa,
                        final double newBudget,
                        final List<Gift> newGifts,
                        final List<Child> newChildren,
-                       final List<ChildUpdate> childrenUpdate) {
+                       final List<ChildUpdate> childrenUpdate,
+                       final CityStrategyEnum distributionStrategy) {
         this.santa = santa;
         this.newBudget = newBudget;
         this.newGifts = newGifts;
         this.newChildren = newChildren;
         this.childrenUpdate = childrenUpdate;
+        this.newDistributionStrategy = distributionStrategy;
     }
 
     /**
@@ -50,6 +54,7 @@ public class UpdateSanta implements Command {
         });
 
         santa.setBudget(newBudget);
+        santa.setDistributionStrategy(newDistributionStrategy);
 
         /* Increment the age for the children that are
          * on Santa's list

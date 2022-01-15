@@ -8,7 +8,7 @@ public final class Gift {
     private final double price;
     private final Category category;
     @JsonIgnore
-    private final int quantity;
+    private int quantity;
 
     public Gift(final String productName, final double price,
                 final Category category, final int quantity) {
@@ -32,5 +32,9 @@ public final class Gift {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

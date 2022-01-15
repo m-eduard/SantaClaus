@@ -60,5 +60,8 @@ public class UpdateChild implements Command {
                     .getAverageScore(child);
             child.setAverageScore(currentAverageScore);
         }
+
+        /* Assign the new elf */
+        child.setElf(childUpdate.getElf());
     }
 }

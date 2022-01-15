@@ -19,12 +19,15 @@ import entities.Gift;
 import entities.Santa;
 import enums.AgeCategory;
 import enums.Category;
+import enums.CityStrategyEnum;
+import enums.ElvesType;
+import factory.DistributionFactory;
 import input.AnnualChangeInput;
 import input.Input;
 import strategy.DistributionStrategy;
-import strategy.IdDistributionStrategy;
 import entities.ChildUpdate;
 import utils.Utils;
+import visitor.*;
 
 
 /**
@@ -37,6 +40,7 @@ public final class Simulation {
     private List<List<Gift>> newGifts;
     private List<List<Child>> newChildren;
     private List<List<ChildUpdate>> childrenUpdates;
+    private List<CityStrategyEnum> distributionUpdates;
     private Santa santa;
 
     private static Simulation instance = null;
@@ -77,7 +81,7 @@ public final class Simulation {
                                 new Child.ChildBuilder(x.getId(), x.getFirstName(),
                                         x.getLastName(), x.getCity(), x.getAge(),
                                         new ArrayList<>(List.of(x.getNiceScore())),
-                                        x.getGiftsPreferences())
+                                        x.getGiftsPreferences(), x.getElf())
                                 .addBonusScore(x.getNiceScoreBonus()).build())));
 
         /* Create a list of Santa's new yearly budgets */
@@ -100,7 +104,7 @@ public final class Simulation {
                         .map(y -> new Child.ChildBuilder(y.getId(), y.getFirstName(),
                                     y.getLastName(), y.getCity(), y.getAge(),
                                     new ArrayList<>(List.of(y.getNiceScore())),
-                                    y.getGiftsPreferences())
+                                    y.getGiftsPreferences(), y.getElf())
                                 .addBonusScore(y.getNiceScoreBonus()).build())
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
@@ -109,8 +113,14 @@ public final class Simulation {
         instance.childrenUpdates = input.getAnnualChanges().stream()
                 .map(x -> x.getChildrenUpdates().stream()
                         .map(y -> new ChildUpdate(y.getId(),
-                                y.getNiceScore(), y.getGiftsPreference()))
+                                y.getNiceScore(), y.getGiftsPreference(),
+                                y.getElf()))
                         .collect(Collectors.toList()))
+                .collect(Collectors.toList());
+
+        /* Create a list of distribution strategies that will be used */
+        instance.distributionUpdates = input.getAnnualChanges().stream()
+                .map(AnnualChangeInput::getDistributionStrategy)
                 .collect(Collectors.toList());
 
         return instance;
@@ -127,9 +137,12 @@ public final class Simulation {
      */
     public void simulateAllYears(final ObjectMapper mapper,
                                  final ArrayNode childrenJsonArray) {
-        /* Strategy used to distribute the available gifts
-         * between all the children */
-        DistributionStrategy distributor = new IdDistributionStrategy();
+        System.out.println("-------------------------------------------------");
+        /* elves */
+        Visitor yellowElf = new YellowElf(santa.getAvailableGifts());
+        Visitor blackElf = new BlackElf();
+        Visitor pinkElf = new PinkElf();
+        Visitor whiteElf = new WhiteElf();
 
         /* Invoker for the commands applied on Santa/Child */
         Invoker invoker = Invoker.getInstance();
@@ -146,7 +159,8 @@ public final class Simulation {
             if (i >= 0) {
                 invoker.execute(new UpdateSanta(santa,
                         santaBudgets.get(i), newGifts.get(i),
-                        newChildren.get(i), childrenUpdates.get(i)));
+                        newChildren.get(i), childrenUpdates.get(i),
+                        distributionUpdates.get(i)));
             }
 
             invoker.execute(new CalculateBudgetUnit(santa));
@@ -154,8 +168,30 @@ public final class Simulation {
                 invoker.execute(new CalculateChildBudget(child, santa.getBudgetUnit()));
             }
 
+            /* Update the budget for children that have a black/pink elf */
+            for (Child child : santa.getChildrenList().values()) {
+                if (child.getElf() == ElvesType.PINK) {
+                    child.accept(pinkElf);
+                } else if (child.getElf() == ElvesType.BLACK) {
+                    child.accept(blackElf);
+                }
+            }
+
+            /* Strategy used to distribute the available gifts
+             * between all the children, based on the current year
+             * specified strategy */
+            DistributionStrategy distributor = DistributionFactory.getInstance()
+                    .createStrategy(santa.getDistributionStrategy());
             distributor.distributeGifts(santa.getAvailableGifts(),
                     santa.getChildrenList());
+
+            /* Children are visited by the yellow elf,
+             *  if no gift was assigned to them */
+            for (Child child : santa.getChildrenList().values()) {
+                if (child.getElf() == ElvesType.YELLOW) {
+                    child.accept(yellowElf);
+                }
+            }
 
             /* List that will store the output data for one year */
             List<Child> yearChildrenList = new ArrayList<>();

@@ -1,5 +1,6 @@
 package strategy;
 
+import common.Constants;
 import entities.Child;
 
 import java.util.List;
@@ -16,6 +17,11 @@ public final class TeenAverageScoreStrategy implements AverageScoreStrategy {
 
         /* averageScore / (1 + 2 + ... + scores.size()), but denominator sum
          * is written as Gaussian sum */
-        return (averageScore * 2) / (scores.size() * (scores.size() + 1));
+        averageScore = (averageScore * 2) / (scores.size() * (scores.size() + 1));
+
+        /* Add the bonus */
+        averageScore += averageScore * child.getNiceScoreBonus() / 100;
+
+        return Math.min(averageScore, Constants.MAX_SCORE);
     }
 }

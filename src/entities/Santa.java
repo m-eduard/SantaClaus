@@ -1,6 +1,7 @@
 package entities;
 
 import enums.Category;
+import enums.CityStrategyEnum;
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,11 @@ public final class Santa {
      * where every kid is mapped to his id
      */
     private final Map<Integer, Child> childrenList;
+    /**
+     * Distribution strategy used by Santa
+     * (can be changed every year)
+     */
+    private CityStrategyEnum distributionStrategy;
 
     public Santa(final double budget,
                  final Map<Category, List<Gift>> availableGifts,
@@ -34,6 +40,9 @@ public final class Santa {
         this.budget = budget;
         this.availableGifts = availableGifts;
         this.childrenList = childrenList;
+
+        /* Default distribution strategy */
+        distributionStrategy = CityStrategyEnum.ID;
     }
 
     public double getBudget() {
@@ -52,11 +61,19 @@ public final class Santa {
         return childrenList;
     }
 
+    public CityStrategyEnum getDistributionStrategy() {
+        return distributionStrategy;
+    }
+
     public void setBudget(final double budget) {
         this.budget = budget;
     }
 
     public void setBudgetUnit(final double budgetUnit) {
         this.budgetUnit = budgetUnit;
+    }
+
+    public void setDistributionStrategy(CityStrategyEnum distributionStrategy) {
+        this.distributionStrategy = distributionStrategy;
     }
 }

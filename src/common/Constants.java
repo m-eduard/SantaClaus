@@ -35,7 +35,10 @@ public final class Constants {
     public static final String CHILDREN_UPDATES = "childrenUpdates";
     public static final String QUANTITY = "quantity";
     public static final String BONUS_SCORE = "niceScoreBonus";
+    public static final String STRATEGY = "strategy";
+    public static final String ELF = "elf";
 
+    public static final double MAX_SCORE = 10.0;
     public static final double BABY_AVERAGE = 10.0;
     public static final int BABY_MAX_AGE = 4;
     public static final int KID_MAX_AGE = 11;

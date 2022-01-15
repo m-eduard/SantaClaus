@@ -8,18 +8,29 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
  * Class that implements a method to distribute gifts
- * to multiple children, sorted increasingly by their id.
+ * to multiple children, sorted decreasingly by their nice score.
  */
-public final class IdDistributionStrategy implements DistributionStrategy {
+public class ChildScoreDistributionStrategy implements DistributionStrategy {
     @Override
     public void distributeGifts(final Map<Category, List<Gift>> availableGifts,
                                 final Map<Integer, Child> children) {
-        /* Sort the list of children increasingly after their id-s */
+        /* Sort the list of children decreasingly after their average scores */
         List<Child> orderedChildren = new ArrayList<>(children.values());
-        orderedChildren.sort(Comparator.comparingInt(Child::getId));
+        orderedChildren.sort(new Comparator<>() {
+            @Override
+            public int compare(Child o1, Child o2) {
+                if (Double.compare(o1.getAverageScore(), o2.getAverageScore()) == 0) {
+                    return o1.getId() - o2.getId();
+                }
+
+                /* Decreasing order */
+                return -Double.compare(o1.getAverageScore(), o2.getAverageScore());
+            }
+        });
 
         /* Assign the gifts */
         for (Child child : orderedChildren) {

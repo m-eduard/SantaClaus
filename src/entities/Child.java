@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import enums.AgeCategory;
 import enums.Category;
 import enums.Cities;
+import enums.ElvesType;
 import factory.AverageScoreFactory;
 import utils.Utils;
+import visitor.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,8 @@ public final class Child {
     private AgeCategory ageCategory;
     @JsonIgnore
     private int niceScoreBonus;
+    @JsonIgnore
+    private ElvesType elf;
 
     private Child(ChildBuilder builder) {
         this.id = builder.id;
@@ -40,6 +44,7 @@ public final class Child {
         this.receivedGifts = builder.receivedGifts;
         this.ageCategory = builder.ageCategory;
         this.niceScoreBonus = builder.niceScoreBonus;
+        this.elf = builder.elf;
 
         /* Get the initial average score, if the child is younger
          * than a YOUNG_ADULT */
@@ -62,10 +67,11 @@ public final class Child {
         private final List<Gift> receivedGifts;
         private AgeCategory ageCategory;
         private int niceScoreBonus;               // optional
+        private ElvesType elf;
 
         public ChildBuilder(final int id, final String firstName, final String lastName,
                             final Cities city, final int age, final List<Double> niceScores,
-                            final List<Category> preferences) {
+                            final List<Category> preferences, final ElvesType elf) {
             this.id = id;
             this.firstName = firstName;
             this.lastName = lastName;
@@ -73,6 +79,7 @@ public final class Child {
             this.age = age;
             this.niceScoreHistory = niceScores;
             this.giftsPreferences = preferences;
+            this.elf = elf;
 
             this.ageCategory = Utils.ageToAgeCategory(age);
             this.receivedGifts = new ArrayList<>();
@@ -104,6 +111,7 @@ public final class Child {
         this.ageCategory = child.getAgeCategory();
         this.receivedGifts = new ArrayList<>(child.getReceivedGifts());
         this.niceScoreBonus = child.getNiceScoreBonus();
+        this.elf = child.getElf();
     }
 
     /**
@@ -126,6 +134,14 @@ public final class Child {
         }
 
         receivedGifts.clear();
+    }
+
+    /**
+     * Method that accepts the visit of a Visitor
+     * @param visitor a Visitor object
+     */
+    public void accept(final Visitor visitor) {
+        visitor.visit(this);
     }
 
     public int getId() {
@@ -176,11 +192,19 @@ public final class Child {
         return niceScoreBonus;
     }
 
+    public ElvesType getElf() {
+        return elf;
+    }
+
     public void setAverageScore(final double averageScore) {
         this.averageScore = averageScore;
     }
 
     public void setAssignedBudget(final double assignedBudget) {
         this.assignedBudget = assignedBudget;
+    }
+
+    public void setElf(ElvesType elf) {
+        this.elf = elf;
     }
 }

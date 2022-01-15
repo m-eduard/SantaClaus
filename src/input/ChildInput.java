@@ -2,6 +2,7 @@ package input;
 
 import enums.Category;
 import enums.Cities;
+import enums.ElvesType;
 
 import java.util.List;
 
@@ -17,12 +18,14 @@ public final class ChildInput {
     private final double niceScore;
     private final List<Category> giftsPreferences;
     private final int niceScoreBonus;
+    private final ElvesType elf;
 
     public ChildInput(final int id, final String lastName,
                       final String firstName, final int age,
                       final Cities city, final double niceScore,
                       final List<Category> giftsPreference,
-                      final int niceScoreBonus) {
+                      final int niceScoreBonus,
+                      final ElvesType elf) {
         this.id = id;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -31,6 +34,7 @@ public final class ChildInput {
         this.niceScore = niceScore;
         this.giftsPreferences = giftsPreference;
         this.niceScoreBonus = niceScoreBonus;
+        this.elf = elf;
     }
 
     public int getId() {
@@ -63,5 +67,9 @@ public final class ChildInput {
 
     public int getNiceScoreBonus() {
         return niceScoreBonus;
+    }
+
+    public ElvesType getElf() {
+        return elf;
     }
 }

@@ -84,7 +84,8 @@ public final class InputLoader {
                                 .get(Constants.NICE_SCORE).toString()),
                         Utils.jsonArrayToCategoryList((JSONArray) ((JSONObject) jsonChild)
                                 .get(Constants.GIFTS_PREFERENCES)),
-                        Integer.parseInt(((JSONObject) jsonChild).get(Constants.BONUS_SCORE).toString())
+                        Integer.parseInt(((JSONObject) jsonChild).get(Constants.BONUS_SCORE).toString()),
+                        Utils.stringToElfType((String) ((JSONObject) jsonChild).get(Constants.ELF))
                 ));
             }
         } else {
@@ -138,7 +139,9 @@ public final class InputLoader {
                         readChildren((JSONArray) ((JSONObject) jsonAnnualChange)
                                 .get(Constants.NEW_CHILDREN)),
                         readChildrenUpdates((JSONArray) ((JSONObject) jsonAnnualChange)
-                                .get(Constants.CHILDREN_UPDATES))
+                                .get(Constants.CHILDREN_UPDATES)),
+                        Utils.stringToCityStrategy((String) ((JSONObject) jsonAnnualChange)
+                                .get(Constants.STRATEGY))
                 ));
             }
         } else {
@@ -165,7 +168,9 @@ public final class InputLoader {
                                 : Double.parseDouble(((JSONObject) jsonChildUpdate)
                                 .get(Constants.NICE_SCORE).toString()),
                         Utils.jsonArrayToCategoryList((JSONArray) ((JSONObject) jsonChildUpdate)
-                                .get(Constants.GIFTS_PREFERENCES))
+                                .get(Constants.GIFTS_PREFERENCES)),
+                        Utils.stringToElfType((String) ((JSONObject) jsonChildUpdate)
+                                .get(Constants.ELF))
                 ));
             }
         } else {

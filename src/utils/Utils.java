@@ -1,9 +1,7 @@
 package utils;
 
 import common.Constants;
-import enums.AgeCategory;
-import enums.Category;
-import enums.Cities;
+import enums.*;
 import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
@@ -74,6 +72,35 @@ public final class Utils {
                 : (age <= Constants.KID_MAX_AGE) ? AgeCategory.KID
                 : (age <= Constants.TEEN_MAX_AGE) ? AgeCategory.TEEN
                 : AgeCategory.YOUNG_ADULT;
+    }
+
+    /**
+     * Transform a string into an enum
+     * @param cityStrategy String
+     * @return a CityStrategyEnum enum
+     */
+    public static CityStrategyEnum stringToCityStrategy(final String cityStrategy) {
+        return switch (cityStrategy) {
+            case "niceScoreCity" -> CityStrategyEnum.NICE_SCORE_CITY;
+            case "id" -> CityStrategyEnum.ID;
+            case "niceScore" -> CityStrategyEnum.NICE_SCORE;
+            default -> null;
+        };
+    }
+
+    /**
+     * Transform a string into an enum
+     * @param elfType String
+     * @return a CityStrategyEnum enum
+     */
+    public static ElvesType stringToElfType(final String elfType) {
+        return switch (elfType) {
+            case "yellow" -> ElvesType.YELLOW;
+            case "black" -> ElvesType.BLACK;
+            case "pink" -> ElvesType.PINK;
+            case "white" -> ElvesType.WHITE;
+            default -> null;
+        };
     }
 
     private Utils() { }
