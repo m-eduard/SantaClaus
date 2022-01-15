@@ -83,7 +83,8 @@ public final class InputLoader {
                         Double.parseDouble(((JSONObject) jsonChild)
                                 .get(Constants.NICE_SCORE).toString()),
                         Utils.jsonArrayToCategoryList((JSONArray) ((JSONObject) jsonChild)
-                                .get(Constants.GIFTS_PREFERENCES))
+                                .get(Constants.GIFTS_PREFERENCES)),
+                        Integer.parseInt(((JSONObject) jsonChild).get(Constants.BONUS_SCORE).toString())
                 ));
             }
         } else {
@@ -103,11 +104,14 @@ public final class InputLoader {
         if (jsonGiftsList != null) {
             for (Object jsonGift : jsonGiftsList) {
                 gifts.add(new GiftInput(
-                        (String) ((JSONObject) jsonGift).get(Constants.PRODUCT_NAME),
+                        (String) ((JSONObject) jsonGift)
+                                .get(Constants.PRODUCT_NAME),
                         Double.parseDouble(((JSONObject) jsonGift)
                                 .get(Constants.PRICE).toString()),
                         Utils.stringToCategory((String) ((JSONObject) jsonGift)
-                                .get(Constants.CATEGORY))
+                                .get(Constants.CATEGORY)),
+                        Integer.parseInt(((JSONObject) jsonGift)
+                                .get(Constants.QUANTITY).toString())
                 ));
             }
         } else {

@@ -46,8 +46,7 @@ public class UpdateSanta implements Command {
             if (!santa.getAvailableGifts().containsKey(gift.getCategory())) {
                 santa.getAvailableGifts().put(gift.getCategory(), new ArrayList<>());
             }
-            santa.getAvailableGifts().get(gift.getCategory())
-                    .add(new Gift(gift.getProductName(), gift.getPrice(), gift.getCategory()));
+            santa.getAvailableGifts().get(gift.getCategory()).add(gift);
         });
 
         santa.setBudget(newBudget);

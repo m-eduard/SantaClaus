@@ -26,20 +26,20 @@ public final class Child {
     private final List<Gift> receivedGifts;
     @JsonIgnore
     private AgeCategory ageCategory;
+    @JsonIgnore
+    private int niceScoreBonus;
 
-    public Child(final int id, final String firstName, final String lastName,
-                 final Cities city, final int age, final List<Double> niceScores,
-                 final List<Category> preferences) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.city = city;
-        this.age = age;
-        this.niceScoreHistory = niceScores;
-        this.giftsPreferences = preferences;
-
-        this.ageCategory = Utils.ageToAgeCategory(age);
-        this.receivedGifts = new ArrayList<>();
+    private Child(ChildBuilder builder) {
+        this.id = builder.id;
+        this.lastName = builder.lastName;
+        this.firstName = builder.firstName;
+        this.city = builder.city;
+        this.age = builder.age;
+        this.giftsPreferences = builder.giftsPreferences;
+        this.niceScoreHistory = builder.niceScoreHistory;
+        this.receivedGifts = builder.receivedGifts;
+        this.ageCategory = builder.ageCategory;
+        this.niceScoreBonus = builder.niceScoreBonus;
 
         /* Get the initial average score, if the child is younger
          * than a YOUNG_ADULT */
@@ -47,6 +47,44 @@ public final class Child {
             this.averageScore = AverageScoreFactory.getInstance()
                     .createStrategy(ageCategory.name())
                     .getAverageScore(this);
+        }
+    }
+
+    /* Builder used to set the optional bonus score for a Child */
+    public static class ChildBuilder {
+        private final int id;
+        private final String lastName;
+        private final String firstName;
+        private final Cities city;
+        private int age;
+        private final List<Category> giftsPreferences;
+        private final List<Double> niceScoreHistory;
+        private final List<Gift> receivedGifts;
+        private AgeCategory ageCategory;
+        private int niceScoreBonus;               // optional
+
+        public ChildBuilder(final int id, final String firstName, final String lastName,
+                            final Cities city, final int age, final List<Double> niceScores,
+                            final List<Category> preferences) {
+            this.id = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.city = city;
+            this.age = age;
+            this.niceScoreHistory = niceScores;
+            this.giftsPreferences = preferences;
+
+            this.ageCategory = Utils.ageToAgeCategory(age);
+            this.receivedGifts = new ArrayList<>();
+        }
+
+        public ChildBuilder addBonusScore(final int bonusScore) {
+            this.niceScoreBonus = bonusScore;
+            return this;
+        }
+
+        public Child build() {
+            return new Child(this);
         }
     }
 
@@ -65,6 +103,7 @@ public final class Child {
         this.giftsPreferences = new ArrayList<>(child.getGiftsPreferences());
         this.ageCategory = child.getAgeCategory();
         this.receivedGifts = new ArrayList<>(child.getReceivedGifts());
+        this.niceScoreBonus = child.getNiceScoreBonus();
     }
 
     /**
@@ -131,6 +170,10 @@ public final class Child {
 
     public AgeCategory getAgeCategory() {
         return ageCategory;
+    }
+
+    public int getNiceScoreBonus() {
+        return niceScoreBonus;
     }
 
     public void setAverageScore(final double averageScore) {

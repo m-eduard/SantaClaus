@@ -16,11 +16,13 @@ public final class ChildInput {
     private final Cities city;
     private final double niceScore;
     private final List<Category> giftsPreferences;
+    private final int niceScoreBonus;
 
     public ChildInput(final int id, final String lastName,
                       final String firstName, final int age,
                       final Cities city, final double niceScore,
-                      final List<Category> giftsPreference) {
+                      final List<Category> giftsPreference,
+                      final int niceScoreBonus) {
         this.id = id;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -28,6 +30,7 @@ public final class ChildInput {
         this.city = city;
         this.niceScore = niceScore;
         this.giftsPreferences = giftsPreference;
+        this.niceScoreBonus = niceScoreBonus;
     }
 
     public int getId() {
@@ -56,5 +59,9 @@ public final class ChildInput {
 
     public List<Category> getGiftsPreferences() {
         return giftsPreferences;
+    }
+
+    public int getNiceScoreBonus() {
+        return niceScoreBonus;
     }
 }

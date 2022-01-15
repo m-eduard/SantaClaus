@@ -2,6 +2,12 @@ Marin Eduard-Constantin, 321CA
 <br>
 January 2022
 
+<h1>Santa - Stage 2</h1>
+Updates:
+
+- added quantity for every gift
+- added builder pattern to assign a child's bonus score
+
 <h1>Santa - Stage 1</h1>
 
 <h2>Flow</h2>

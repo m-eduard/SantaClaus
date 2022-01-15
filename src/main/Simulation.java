@@ -65,17 +65,20 @@ public final class Simulation {
                 availableGifts.put(gift.getCategory(), new ArrayList<>());
             }
             availableGifts.get(gift.getCategory())
-                    .add(new Gift(gift.getProductName(), gift.getPrice(), gift.getCategory()));
+                    .add(new Gift(gift.getProductName(), gift.getPrice(),
+                            gift.getCategory(), gift.getQuantity()));
         });
 
         /* Put in Santa's list only the children that have less than 18 years */
         instance.santa = new Santa(input.getSantaBudget(), availableGifts,
                 input.getInitialData().getChildren().stream()
                         .filter(x -> Utils.ageToAgeCategory(x.getAge()) != AgeCategory.YOUNG_ADULT)
-                        .collect(Collectors.toMap(x -> x.getId(), x -> new Child(x.getId(),
-                                x.getFirstName(), x.getLastName(), x.getCity(), x.getAge(),
-                                new ArrayList<>(List.of(x.getNiceScore())),
-                                x.getGiftsPreferences()))));
+                        .collect(Collectors.toMap(x -> x.getId(), x ->
+                                new Child.ChildBuilder(x.getId(), x.getFirstName(),
+                                        x.getLastName(), x.getCity(), x.getAge(),
+                                        new ArrayList<>(List.of(x.getNiceScore())),
+                                        x.getGiftsPreferences())
+                                .addBonusScore(x.getNiceScoreBonus()).build())));
 
         /* Create a list of Santa's new yearly budgets */
         instance.santaBudgets = input.getAnnualChanges().stream()
@@ -85,7 +88,8 @@ public final class Simulation {
          * converting GiftInput objects into Gift objects */
         instance.newGifts = input.getAnnualChanges().stream()
                 .map(x -> x.getNewGifts().stream()
-                        .map(y -> new Gift(y.getProductName(), y.getPrice(), y.getCategory()))
+                        .map(y -> new Gift(y.getProductName(), y.getPrice(),
+                                y.getCategory(), y.getQuantity()))
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
 
@@ -93,10 +97,11 @@ public final class Simulation {
          * in every year (ChildInput is converted into Child) */
         instance.newChildren = input.getAnnualChanges().stream()
                 .map(x -> x.getNewChildren().stream()
-                        .map(y -> new Child(y.getId(), y.getFirstName(),
-                                y.getLastName(), y.getCity(), y.getAge(),
-                                new ArrayList<>(List.of(y.getNiceScore())),
-                                y.getGiftsPreferences()))
+                        .map(y -> new Child.ChildBuilder(y.getId(), y.getFirstName(),
+                                    y.getLastName(), y.getCity(), y.getAge(),
+                                    new ArrayList<>(List.of(y.getNiceScore())),
+                                    y.getGiftsPreferences())
+                                .addBonusScore(y.getNiceScoreBonus()).build())
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
 

@@ -1,2 +1,9 @@
 Starting audit...
+[ERROR] C:\Users\eduar\home\2\POO\Santa1\.\src\entities\Child.java:32:19: Parameter builder should be final. [FinalParameters]
+[ERROR] C:\Users\eduar\home\2\POO\Santa1\.\src\entities\Child.java:81:9: Class 'ChildBuilder' looks like designed for extension (can be subclassed), but the method 'addBonusScore' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'ChildBuilder' final or making the method 'addBonusScore' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
+[ERROR] C:\Users\eduar\home\2\POO\Santa1\.\src\entities\Child.java:81:9: Missing a Javadoc comment. [MissingJavadocMethod]
+[ERROR] C:\Users\eduar\home\2\POO\Santa1\.\src\entities\Child.java:86:9: Class 'ChildBuilder' looks like designed for extension (can be subclassed), but the method 'build' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'ChildBuilder' final or making the method 'build' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
+[ERROR] C:\Users\eduar\home\2\POO\Santa1\.\src\entities\Child.java:86:9: Missing a Javadoc comment. [MissingJavadocMethod]
+[ERROR] C:\Users\eduar\home\2\POO\Santa1\.\src\input\InputLoader.java:87: Line is longer than 100 characters (found 104). [LineLength]
 Audit done.
+Checkstyle ends with 6 errors.

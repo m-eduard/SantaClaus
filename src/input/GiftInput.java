@@ -9,12 +9,14 @@ public final class GiftInput {
     private final String productName;
     private final double price;
     private final Category category;
+    private final int quantity;
 
     public GiftInput(final String productName, final double price,
-                     final Category category) {
+                     final Category category, final int quantity) {
         this.productName = productName;
         this.price = price;
         this.category = category;
+        this.quantity = quantity;
     }
 
     public String getProductName() {
@@ -27,5 +29,9 @@ public final class GiftInput {
 
     public Category getCategory() {
         return category;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }
