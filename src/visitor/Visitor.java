@@ -1,7 +1,6 @@
 package visitor;
 
 import entities.Child;
-import entities.Santa;
 
 public interface Visitor {
     /**

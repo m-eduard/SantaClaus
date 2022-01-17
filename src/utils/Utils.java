@@ -1,7 +1,12 @@
 package utils;
 
 import common.Constants;
-import enums.*;
+import enums.AgeCategory;
+import enums.Category;
+import enums.Cities;
+import enums.CityStrategyEnum;
+import enums.ElvesType;
+
 import org.json.simple.JSONArray;
 
 import java.util.ArrayList;

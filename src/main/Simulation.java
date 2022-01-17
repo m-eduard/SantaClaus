@@ -27,7 +27,10 @@ import input.Input;
 import strategy.DistributionStrategy;
 import entities.ChildUpdate;
 import utils.Utils;
-import visitor.*;
+import visitor.BlackElf;
+import visitor.PinkElf;
+import visitor.Visitor;
+import visitor.YellowElf;
 
 
 /**
@@ -137,12 +140,10 @@ public final class Simulation {
      */
     public void simulateAllYears(final ObjectMapper mapper,
                                  final ArrayNode childrenJsonArray) {
-        System.out.println("-------------------------------------------------");
-        /* elves */
+        /* Elves */
         Visitor yellowElf = new YellowElf(santa.getAvailableGifts());
         Visitor blackElf = new BlackElf();
         Visitor pinkElf = new PinkElf();
-        Visitor whiteElf = new WhiteElf();
 
         /* Invoker for the commands applied on Santa/Child */
         Invoker invoker = Invoker.getInstance();
@@ -163,6 +164,7 @@ public final class Simulation {
                         distributionUpdates.get(i)));
             }
 
+            /* Calculate the budget for every child */
             invoker.execute(new CalculateBudgetUnit(santa));
             for (Child child : santa.getChildrenList().values()) {
                 invoker.execute(new CalculateChildBudget(child, santa.getBudgetUnit()));
@@ -185,8 +187,7 @@ public final class Simulation {
             distributor.distributeGifts(santa.getAvailableGifts(),
                     santa.getChildrenList());
 
-            /* Children are visited by the yellow elf,
-             *  if no gift was assigned to them */
+            /* Children are visited by the yellow elf */
             for (Child child : santa.getChildrenList().values()) {
                 if (child.getElf() == ElvesType.YELLOW) {
                     child.accept(yellowElf);

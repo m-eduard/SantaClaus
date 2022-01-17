@@ -53,7 +53,7 @@ public class UpdateChild implements Command {
         if (childUpdate.getNiceScore() != null) {
             child.getNiceScoreHistory().add(childUpdate.getNiceScore());
 
-            /* Calculate the average score, because a new
+            /* Recalculate the average score, because a new
              * yearly score was added */
             double currentAverageScore = AverageScoreFactory.getInstance()
                     .createStrategy(child.getAgeCategory().name())

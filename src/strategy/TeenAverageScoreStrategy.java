@@ -20,7 +20,7 @@ public final class TeenAverageScoreStrategy implements AverageScoreStrategy {
         averageScore = (averageScore * 2) / (scores.size() * (scores.size() + 1));
 
         /* Add the bonus */
-        averageScore += averageScore * child.getNiceScoreBonus() / 100;
+        averageScore += averageScore * child.getNiceScoreBonus() / Constants.CENT;
 
         return Math.min(averageScore, Constants.MAX_SCORE);
     }

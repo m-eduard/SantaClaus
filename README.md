@@ -5,8 +5,48 @@ January 2022
 <h1>Santa - Stage 2</h1>
 Updates:
 
-- added quantity for every gift
-- added builder pattern to assign a child's bonus score
+- every child can now receive a bonus score<sup>1)</sup>, which is
+set when a Child object is created, using the <b>Builder Pattern</b>
+- every child receives an elf each year <sup>2)
+- to distribute the gifts, Santa uses a specified strategy every
+year <sup>3)
+- gifts have a limited quantity
+
+
+[//]: # (- bonus score is added when calculating the general nice score)
+
+- --------------------------
+<sup>3) </sup>
+The bonus score is added to the general nice score directly
+in the method that calculates the average score.
+
+<sup>2) </sup>
+A Child retains the type of the elf assigned in the current year,
+and then he is visited by an elf that corresponds to the given
+type, which applies specific changes, like increasing/decreasing
+child's budget or offering him a gift (every type of elf is
+implemented as a Visitor).
+
+&nbsp;&nbsp;&nbsp; Elves visits stages:
+- firstly, pink and black elves visits their children, to modify
+the budgets
+- then, after Santa distributes the gifts, yellow elf visits his
+children and offers (only to the ones that never received a gift
+from Santa) the most inexpensive gift from the most wanted category,
+if it's available.
+
+<sup>3) </sup>
+There are multiple ways to distribute the gifts. The implementation
+uses a Strategy class for every type of distribution, which sorts
+the children in the needed order and then uses a general distribution
+Command, which starts assigning gifts to a list of sorted children,
+starting from the beginning of the list until the end is reached.
+In this process, a gift can be assigned only if its quantity is
+greater than 0.
+
+
+
+
 
 <h1>Santa - Stage 1</h1>
 

@@ -44,6 +44,9 @@ public final class Constants {
     public static final int KID_MAX_AGE = 11;
     public static final int TEEN_MAX_AGE = 18;
 
+    public static final int CENT = 100;
+    public static final int BONUS_ELF = 30;
+
     private Constants() {
         //constructor for checkstyle
     }

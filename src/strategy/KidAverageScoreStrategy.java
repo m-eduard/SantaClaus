@@ -10,7 +10,7 @@ public final class KidAverageScoreStrategy implements AverageScoreStrategy {
                 .reduce(0.0, Double::sum) / child.getNiceScoreHistory().size();
 
         /* Add the bonus to the initial average score */
-        averageScore += averageScore * child.getNiceScoreBonus() / 100;
+        averageScore += averageScore * child.getNiceScoreBonus() / Constants.CENT;
 
         return Math.min(averageScore, Constants.MAX_SCORE);
     }

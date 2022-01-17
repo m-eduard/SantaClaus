@@ -84,7 +84,8 @@ public final class InputLoader {
                                 .get(Constants.NICE_SCORE).toString()),
                         Utils.jsonArrayToCategoryList((JSONArray) ((JSONObject) jsonChild)
                                 .get(Constants.GIFTS_PREFERENCES)),
-                        Integer.parseInt(((JSONObject) jsonChild).get(Constants.BONUS_SCORE).toString()),
+                        Integer.parseInt(((JSONObject) jsonChild)
+                                .get(Constants.BONUS_SCORE).toString()),
                         Utils.stringToElfType((String) ((JSONObject) jsonChild).get(Constants.ELF))
                 ));
             }

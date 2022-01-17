@@ -10,11 +10,15 @@ import strategy.IdDistributionStrategy;
  * This class is used to generate a DistributionStrategy object
  * (implemented as singleton)
  */
-public class DistributionFactory {
+public final class DistributionFactory {
     private static DistributionFactory factory;
 
     private DistributionFactory() { }
 
+    /**
+     * Method that obtains the Singleton's instance
+     * @return DistributionFactory instance
+     */
     public static DistributionFactory getInstance() {
         if (factory == null) {
             factory = new DistributionFactory();

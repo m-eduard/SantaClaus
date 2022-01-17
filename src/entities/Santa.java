@@ -73,7 +73,7 @@ public final class Santa {
         this.budgetUnit = budgetUnit;
     }
 
-    public void setDistributionStrategy(CityStrategyEnum distributionStrategy) {
+    public void setDistributionStrategy(final CityStrategyEnum distributionStrategy) {
         this.distributionStrategy = distributionStrategy;
     }
 }

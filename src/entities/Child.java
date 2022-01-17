@@ -33,7 +33,7 @@ public final class Child {
     @JsonIgnore
     private ElvesType elf;
 
-    private Child(ChildBuilder builder) {
+    private Child(final ChildBuilder builder) {
         this.id = builder.id;
         this.lastName = builder.lastName;
         this.firstName = builder.firstName;
@@ -56,18 +56,18 @@ public final class Child {
     }
 
     /* Builder used to set the optional bonus score for a Child */
-    public static class ChildBuilder {
+    public static final class ChildBuilder {
         private final int id;
         private final String lastName;
         private final String firstName;
         private final Cities city;
-        private int age;
+        private final int age;
         private final List<Category> giftsPreferences;
         private final List<Double> niceScoreHistory;
         private final List<Gift> receivedGifts;
-        private AgeCategory ageCategory;
+        private final AgeCategory ageCategory;
         private int niceScoreBonus;               // optional
-        private ElvesType elf;
+        private final ElvesType elf;
 
         public ChildBuilder(final int id, final String firstName, final String lastName,
                             final Cities city, final int age, final List<Double> niceScores,
@@ -85,11 +85,20 @@ public final class Child {
             this.receivedGifts = new ArrayList<>();
         }
 
+        /**
+         * Sets the bonus score of a Child
+         * @param bonusScore integer
+         * @return current instance, as ChildBuilder object
+         */
         public ChildBuilder addBonusScore(final int bonusScore) {
             this.niceScoreBonus = bonusScore;
             return this;
         }
 
+        /**
+         * Method that creates a Child object using builder's data
+         * @return a Child object
+         */
         public Child build() {
             return new Child(this);
         }
@@ -204,7 +213,7 @@ public final class Child {
         this.assignedBudget = assignedBudget;
     }
 
-    public void setElf(ElvesType elf) {
+    public void setElf(final ElvesType elf) {
         this.elf = elf;
     }
 }

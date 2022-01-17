@@ -1,12 +1,13 @@
 package visitor;
 
+import common.Constants;
 import entities.Child;
 
-public class BlackElf implements Visitor {
+public final class BlackElf implements Visitor {
     @Override
-    public void visit(Child child) {
+    public void visit(final Child child) {
         double currentBudget = child.getAssignedBudget();
-        currentBudget -= currentBudget * 30 / 100;
+        currentBudget -= currentBudget * Constants.BONUS_ELF / Constants.CENT;
 
         child.setAssignedBudget(currentBudget);
     }

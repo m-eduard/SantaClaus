@@ -7,10 +7,14 @@ import enums.Cities;
 import enums.CityStrategyEnum;
 import factory.DistributionFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class CityScoreDistributionStrategy implements DistributionStrategy {
+public final class CityScoreDistributionStrategy implements DistributionStrategy {
     @Override
     public void distributeGifts(final Map<Category, List<Gift>> availableGifts,
                                 final Map<Integer, Child> children) {
@@ -49,20 +53,12 @@ public class CityScoreDistributionStrategy implements DistributionStrategy {
 
         /* Now, sort the towns by nice score average in descending order */
         List<Cities> sortedTowns = new ArrayList<>(towns.keySet());
-        sortedTowns.sort(new Comparator<>() {
-            @Override
-            public int compare(Cities o1, Cities o2) {
-                if (Double.compare(townsScores.get(o1), townsScores.get(o2)) == 0) {
-                    return o1.toString().compareTo(o2.toString());
-                }
-                return -Double.compare(townsScores.get(o1), townsScores.get(o2));
+        sortedTowns.sort((o1, o2) -> {
+            if (Double.compare(townsScores.get(o1), townsScores.get(o2)) == 0) {
+                return o1.toString().compareTo(o2.toString());
             }
+            return -Double.compare(townsScores.get(o1), townsScores.get(o2));
         });
-
-        for (int i = 0; i  < sortedTowns.size(); ++i)
-            System.out.println(sortedTowns.get(i) + " " + townsScores.get(sortedTowns.get(i)));
-
-        System.out.println();
 
         /* Start assigning gifts, by using IdDistributionStrategy */
         DistributionStrategy distributor = DistributionFactory.getInstance()

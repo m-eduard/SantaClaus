@@ -1,12 +1,17 @@
 package visitor;
 
+import common.Constants;
 import entities.Child;
 
-public class PinkElf implements Visitor {
+public final class PinkElf implements Visitor {
+    /**
+     * Increases child's assigned budget by 30%.
+     * @param child Child object
+     */
     @Override
-    public void visit(Child child) {
+    public void visit(final Child child) {
         double currentBudget = child.getAssignedBudget();
-        currentBudget += currentBudget * 30 / 100;
+        currentBudget += currentBudget * Constants.BONUS_ELF / Constants.CENT;
 
         child.setAssignedBudget(currentBudget);
     }
