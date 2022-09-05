@@ -12,11 +12,8 @@ set when a Child object is created, using the <b>Builder Pattern</b>
 year <sup>3)
 - gifts have a limited quantity
 
-
-[//]: # (- bonus score is added when calculating the general nice score)
-
 - --------------------------
-<sup>3) </sup>
+<sup>1) </sup>
 The bonus score is added to the general nice score directly
 in the method that calculates the average score.
 
@@ -43,8 +40,6 @@ Command, which starts assigning gifts to a list of sorted children,
 starting from the beginning of the list until the end is reached.
 In this process, a gift can be assigned only if its quantity is
 greater than 0.
-
-
 
 
 
